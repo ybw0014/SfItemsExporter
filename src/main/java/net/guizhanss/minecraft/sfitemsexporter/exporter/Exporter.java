@@ -8,6 +8,7 @@ import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItem;
 import io.github.thebusybiscuit.slimefun4.core.attributes.EnergyNetComponent;
 import io.github.thebusybiscuit.slimefun4.core.attributes.Radioactive;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
 import net.guizhanss.guizhanlib.minecraft.helper.inventory.ItemStackHelper;
 import net.guizhanss.minecraft.sfitemsexporter.SfItemsExporter;
@@ -129,7 +130,7 @@ public class Exporter {
             JsonArray recipe = new JsonArray();
             for (ItemStack is : item.getRecipe()) {
                 if (is != null) {
-                    recipe.add(getAsJson(is));
+                    recipe.add(getRecipeItemAsJson(is));
                 } else {
                     recipe.add(JsonNull.INSTANCE);
                 }
@@ -155,7 +156,7 @@ public class Exporter {
 
         final ItemMeta im = is.getItemMeta();
         if (im.hasDisplayName()) {
-            json.addProperty("name", im.getDisplayName().replace(ChatColor.COLOR_CHAR, '&'));
+            json.addProperty("name", stripColor(ChatColors.color(im.getDisplayName())));
         }
 
         final JsonArray lore = new JsonArray();
@@ -163,6 +164,39 @@ public class Exporter {
             im.getLore().stream().map(s -> s.replace(ChatColor.COLOR_CHAR, '&')).forEach(lore::add);
         }
         json.add("lore", lore);
+
+        return json;
+    }
+
+    /**
+     * This converts the given recipe {@link ItemStack} into a {@link JsonObject}.
+     *
+     * @param is Our {@link ItemStack}.
+     * @return The {@link JsonObject}-representation of this recipe {@link ItemStack}
+     */
+    private static JsonObject getRecipeItemAsJson(final ItemStack is) {
+        final JsonObject json = new JsonObject();
+        SlimefunItem sfItem = SlimefunItem.getByItem(is);
+        if (sfItem != null) {
+            json.addProperty("material", sfItem.getId());
+        } else {
+            json.addProperty("material", is.getType().toString());
+        }
+
+        if (is.getAmount() > 1) {
+            json.addProperty("amount", is.getAmount());
+        }
+
+        final ItemMeta im = is.getItemMeta();
+        json.addProperty("name", stripColor(ItemStackHelper.getDisplayName(is)));
+
+        if (ConfigManager.getConfig().getBoolean("detailed-item")) {
+            final JsonArray lore = new JsonArray();
+            if (im.hasLore()) {
+                im.getLore().stream().map(s -> s.replace(ChatColor.COLOR_CHAR, '&')).forEach(lore::add);
+            }
+            json.add("lore", lore);
+        }
 
         return json;
     }

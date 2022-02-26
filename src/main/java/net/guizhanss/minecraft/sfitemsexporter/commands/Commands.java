@@ -17,15 +17,16 @@ public class Commands extends BaseCommand {
     public void onDefault(CommandSender sender) {
         ChatUtil.send(sender, "&6==== &a&lSfItemsExporter &6- by &bybw0014 &6====");
         ChatUtil.send(sender, "&fAlias: sfitemsexporter, sfie, sfexporter");
-        ChatUtil.send(sender, "&e/sfie generate &7&l- &fGenerate items json");
+        ChatUtil.send(sender, "&e/sfie export &7&l- &fExport items json");
         ChatUtil.send(sender, "&e/sfie reload &7&l- &fReload exporter configuration");
     }
 
-    @Subcommand("generate")
-    @CommandPermission("sfitemexporter.generate")
-    @Description("Generate items json")
-    public void generate(CommandSender sender) {
+    @Subcommand("export")
+    @CommandPermission("sfitemexporter.export")
+    @Description("Export items json")
+    public void export(CommandSender sender) {
         Exporter.export();
+        ChatUtil.send(sender, "&aDone!");
     }
 
     @Subcommand("reload")
@@ -33,5 +34,6 @@ public class Commands extends BaseCommand {
     @Description("Reload exporter config")
     public void reload(CommandSender sender) {
         ConfigManager.reloadAll();
+        ChatUtil.send(sender, "&aReloaded configuration!");
     }
 }
