@@ -1,0 +1,21 @@
+# If enabled, the item material, item name, and item lore will be exported in item field
+# Otherwise, the name field that contains item field
+detailed-item: false
+
+# Whether the color code in names and lores should be removed
+strip-color: true
+
+# Export category information
+category: false
+
+# Export item settings
+item-settings: false
+
+# Export research information
+research: false
+
+# Export electric information
+electric: false
+
+# Export radioactive information
+radioactive: false
