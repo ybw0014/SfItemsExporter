@@ -1,0 +1,8 @@
+name: SfItemsExporter
+version: '${project.version}'
+main: net.guizhanss.minecraft.sfitemsexporter.SfItemsExporter
+api-version: 1.14
+depend: [ Slimefun ]
+authors: [ ybw0014 ]
+description: Slimefun items exporter
+website: https://ybw0014.dev
