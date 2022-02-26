@@ -24,3 +24,11 @@ Use `/sfie export` command to export all slimefun items to a json file. The expo
 
 You can change the exporter settings in `/plugins/SfItemsExporter/config.yml`.  
 你可以在`/plugins/SfItemsExporter/config.yml`文件中修改导出设置。
+
+## Credits
+
+The exporter is modified from SFItemsExporter software by Walshy and TheBusyBiscuit:  
+导出器修改自SFItemsExporter(由 Walshy and TheBusyBiscuit 编写):
+
+https://github.com/WalshyDev/SFItemsExporter
+
