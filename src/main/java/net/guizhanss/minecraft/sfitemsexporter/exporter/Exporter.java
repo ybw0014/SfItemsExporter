@@ -10,6 +10,7 @@ import io.github.thebusybiscuit.slimefun4.core.attributes.Radioactive;
 import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.common.ChatColors;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.config.Config;
+import io.github.thebusybiscuit.slimefun4.utils.SlimefunUtils;
 import net.guizhanss.guizhanlib.minecraft.helper.inventory.ItemStackHelper;
 import net.guizhanss.minecraft.sfitemsexporter.SfItemsExporter;
 import net.guizhanss.minecraft.sfitemsexporter.config.ConfigManager;
@@ -44,7 +45,7 @@ public class Exporter {
 
         File file = new File(SfItemsExporter.getInstance().getDataFolder(), "items.json");
 
-        try (Writer fw = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);) {
+        try (Writer fw = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
             fw.write(root.toString());
             fw.flush();
         } catch (IOException e) {
@@ -82,6 +83,7 @@ public class Exporter {
             }
 
             loadRecipe(item, jsonObj);
+            loadRecipeOutput(item, jsonObj);
 
             if (ConfigManager.getConfig().getBoolean("research") && item.getResearch() != null) {
                 jsonObj.addProperty("research", item.getResearch().getKey().toString());
@@ -124,20 +126,23 @@ public class Exporter {
      * @param json Our target {@link JsonObject}
      */
     private static void loadRecipe(SlimefunItem item, JsonObject json) {
-        if (item.getRecipeType() != null && item.getRecipe() != null) {
-            json.addProperty("recipeType", item.getRecipeType().getKey().toString());
+        json.addProperty("recipeType", item.getRecipeType().getKey().toString());
 
-            JsonArray recipe = new JsonArray();
-            for (ItemStack is : item.getRecipe()) {
-                if (is != null) {
-                    recipe.add(getRecipeItemAsJson(is));
-                } else {
-                    recipe.add(JsonNull.INSTANCE);
-                }
-
+        JsonArray recipe = new JsonArray();
+        for (ItemStack is : item.getRecipe()) {
+            if (is != null) {
+                recipe.add(getRecipeItemAsJson(is));
+            } else {
+                recipe.add(JsonNull.INSTANCE);
             }
-            json.add("recipe", recipe);
+
         }
+        json.add("recipe", recipe);
+    }
+
+    private static void loadRecipeOutput(SlimefunItem item, JsonObject json) {
+        ItemStack output = item.getRecipeOutput();
+        json.addProperty("output", output.getAmount());
     }
 
     /**
